@@ -6,336 +6,1110 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#1e1e2e">
   <title>Todo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
   <style>
-    /* Catppuccin Mocha palette */
-    :root {
-      --ctp-rosewater: #f5e0dc;
-      --ctp-flamingo: #f2cdcd;
-      --ctp-pink: #f5c2e7;
-      --ctp-mauve: #cba6f7;
-      --ctp-red: #f38ba8;
-      --ctp-maroon: #eba0ac;
-      --ctp-peach: #fab387;
-      --ctp-yellow: #f9e2af;
-      --ctp-green: #a6e3a1;
-      --ctp-teal: #94e2d5;
-      --ctp-sky: #89dceb;
-      --ctp-sapphire: #74c7ec;
-      --ctp-blue: #89b4fa;
-      --ctp-lavender: #b4befe;
-      --ctp-text: #cdd6f4;
-      --ctp-subtext1: #bac2de;
-      --ctp-subtext0: #a6adc8;
-      --ctp-overlay2: #9399b2;
-      --ctp-overlay1: #7f849c;
-      --ctp-overlay0: #6c7086;
-      --ctp-surface2: #585b70;
-      --ctp-surface1: #45475a;
-      --ctp-surface0: #313244;
-      --ctp-base: #1e1e2e;
-      --ctp-mantle: #181825;
-      --ctp-crust: #11111b;
+    @layer reset, tokens, base, components, a11y;
+
+    @layer reset {
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    @layer tokens {
+      :root {
+        /* Catppuccin Mocha palette */
+        --ctp-rosewater: #f5e0dc;
+        --ctp-flamingo: #f2cdcd;
+        --ctp-pink: #f5c2e7;
+        --ctp-mauve: #cba6f7;
+        --ctp-red: #f38ba8;
+        --ctp-maroon: #eba0ac;
+        --ctp-peach: #fab387;
+        --ctp-yellow: #f9e2af;
+        --ctp-green: #a6e3a1;
+        --ctp-teal: #94e2d5;
+        --ctp-sky: #89dceb;
+        --ctp-sapphire: #74c7ec;
+        --ctp-blue: #89b4fa;
+        --ctp-lavender: #b4befe;
+        --ctp-text: #cdd6f4;
+        --ctp-subtext1: #bac2de;
+        --ctp-subtext0: #a6adc8;
+        --ctp-overlay2: #9399b2;
+        --ctp-overlay1: #7f849c;
+        --ctp-overlay0: #6c7086;
+        --ctp-surface2: #585b70;
+        --ctp-surface1: #45475a;
+        --ctp-surface0: #313244;
+        --ctp-base: #1e1e2e;
+        --ctp-mantle: #181825;
+        --ctp-crust: #11111b;
+
+        /* Font stacks */
+        --font-sans: 'Inter', system-ui, sans-serif;
+        --font-mono: 'DM Mono', ui-monospace, 'Cascadia Mono', 'Fira Mono', monospace;
+
+        /* Spacing scale */
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 0.75rem;
+        --space-lg: 1rem;
+        --space-xl: 1.25rem;
+        --space-2xl: 1.5rem;
+        --space-3xl: 2rem;
+        --space-4xl: 3rem;
+
+        /* Radii */
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 12px;
+        --radius-full: 999px;
+
+        /* Touch target minimum */
+        --touch-min: 44px;
+      }
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-      background-color: var(--ctp-base);
-      color: var(--ctp-text);
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    main.app {
-      width: 100%;
-      max-width: 600px;
-      padding: 1.5rem 1rem env(safe-area-inset-bottom, 1.5rem);
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--ctp-mauve);
-    }
-
-    .task-count {
-      font-size: 0.85rem;
-      color: var(--ctp-overlay1);
-      background: var(--ctp-surface0);
-      padding: 0.3rem 0.75rem;
-      border-radius: 999px;
-    }
-
-    /* Input area */
-    .input-row {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .input-row input {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      border: 2px solid var(--ctp-surface1);
-      border-radius: 12px;
-      background: var(--ctp-surface0);
-      color: var(--ctp-text);
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .input-row input:focus {
-      border-color: var(--ctp-mauve);
-      outline: 2px solid var(--ctp-mauve);
-      outline-offset: 2px;
-    }
-
-    .input-row input::placeholder {
-      color: var(--ctp-overlay0);
-    }
-
-    .input-row button {
-      padding: 0.75rem 1.25rem;
-      border: none;
-      border-radius: 12px;
-      background: var(--ctp-mauve);
-      color: var(--ctp-crust);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      white-space: nowrap;
-    }
-
-    .input-row button:hover {
-      background: var(--ctp-lavender);
-    }
-
-    .input-row button:active {
-      transform: scale(0.96);
-    }
-
-    /* Focus outlines for keyboard navigation */
-    :focus-visible {
-      outline: 2px solid var(--ctp-mauve);
-      outline-offset: 2px;
-    }
-
-    /* Filter tabs */
-    .filters {
-      display: flex;
-      gap: 0.25rem;
-      background: var(--ctp-mantle);
-      padding: 0.25rem;
-      border-radius: 12px;
-    }
-
-    .filters button {
-      flex: 1;
-      padding: 0.65rem 0.5rem;
-      border: none;
-      border-radius: 10px;
-      background: transparent;
-      color: var(--ctp-overlay1);
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-      min-height: 44px;
-    }
-
-    .filters button.active {
-      background: var(--ctp-surface0);
-      color: var(--ctp-text);
-    }
-
-    .filters button:hover:not(.active) {
-      color: var(--ctp-subtext0);
-    }
-
-    /* Todo list */
-    .todo-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .todo-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.85rem 1rem;
-      background: var(--ctp-surface0);
-      border-radius: 12px;
-      transition: background 0.2s, opacity 0.3s, transform 0.3s;
-    }
-
-    .todo-item.new-item {
-      animation: slideIn 0.25s ease-out;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .todo-item.completed {
-      opacity: 0.55;
-    }
-
-    .todo-item.completed .todo-text {
-      text-decoration: line-through;
-      color: var(--ctp-overlay0);
-    }
-
-    /* Custom checkbox */
-    .checkbox {
-      position: relative;
-      width: 44px;
-      height: 44px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .checkbox input {
-      position: absolute;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      margin: 0;
-    }
-
-    .checkbox .checkmark {
-      width: 22px;
-      height: 22px;
-      border: 2px solid var(--ctp-overlay0);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, border-color 0.2s;
-      pointer-events: none;
-    }
-
-    .checkbox input:checked + .checkmark {
-      background: var(--ctp-green);
-      border-color: var(--ctp-green);
-    }
-
-    .checkbox .checkmark svg {
-      width: 14px;
-      height: 14px;
-      fill: none;
-      stroke: var(--ctp-crust);
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-
-    .checkbox input:checked + .checkmark svg {
-      opacity: 1;
-    }
-
-    .todo-text {
-      flex: 1;
-      font-size: 0.95rem;
-      color: var(--ctp-text);
-      word-break: break-word;
-    }
-
-    .delete-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0.75rem;
-      border-radius: 6px;
-      color: var(--ctp-overlay0);
-      transition: color 0.2s, background 0.2s;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      min-width: 44px;
-      min-height: 44px;
-      justify-content: center;
-    }
-
-    .delete-btn:hover {
-      color: var(--ctp-red);
-      background: var(--ctp-surface1);
-    }
-
-    .delete-btn svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--ctp-overlay0);
-    }
-
-    .empty-state .icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.75rem;
-      opacity: 0.6;
-    }
-
-    .empty-state p {
-      font-size: 0.95rem;
-    }
-
-    /* Clear completed */
-    .clear-completed {
-      background: none;
-      border: 1px solid var(--ctp-surface2);
-      color: var(--ctp-overlay1);
-      padding: 0.5rem 1rem;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-      align-self: center;
-      min-height: 44px;
-    }
-
-    .clear-completed:hover {
-      color: var(--ctp-red);
-      border-color: var(--ctp-red);
-    }
-
-    /* Responsive */
-    @media (min-width: 480px) {
-      main.app {
-        padding: 2rem 1.5rem;
+    @layer base {
+      body {
+        font-family: var(--font-sans);
+        font-optical-sizing: auto;
+        background-color: var(--ctp-base);
+        color: var(--ctp-text);
+        line-height: 1.5;
+        letter-spacing: -0.011em;
+        min-block-size: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      header h1 {
-        font-size: 2rem;
+      code, kbd, samp, pre {
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+      }
+    }
+
+    @layer components {
+      /* App shell */
+      main.app {
+        inline-size: 100%;
+        max-inline-size: 600px;
+        padding: var(--space-2xl) var(--space-lg) env(safe-area-inset-bottom, var(--space-2xl));
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xl);
+      }
+
+      /* Header */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        & h1 {
+          font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+          font-weight: 700;
+          color: var(--ctp-mauve);
+          letter-spacing: -0.025em;
+          text-wrap: balance;
+        }
+      }
+
+      .task-count {
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--ctp-overlay1);
+        background: var(--ctp-surface0);
+        padding: var(--space-xs) var(--space-md);
+        border-radius: var(--radius-full);
+        letter-spacing: 0;
+      }
+
+      /* Input area */
+      .input-row {
+        display: flex;
+        gap: var(--space-sm);
+
+        & input[type="text"] {
+          flex: 1;
+          padding: var(--space-md) var(--space-lg);
+          border: 2px solid var(--ctp-surface1);
+          border-radius: var(--radius-lg);
+          background: var(--ctp-surface0);
+          color: var(--ctp-text);
+          font-family: inherit;
+          font-size: 1rem;
+          line-height: 1.5;
+          outline: none;
+          transition: border-color 0.2s;
+
+          &:focus {
+            border-color: var(--ctp-mauve);
+            outline: 2px solid var(--ctp-mauve);
+            outline-offset: 2px;
+          }
+
+          &::placeholder {
+            color: var(--ctp-overlay0);
+          }
+        }
+
+        & button {
+          padding: var(--space-md) var(--space-xl);
+          border: none;
+          border-radius: var(--radius-lg);
+          background: var(--ctp-mauve);
+          color: var(--ctp-crust);
+          font-family: inherit;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.1s;
+          white-space: nowrap;
+
+          &:hover {
+            background: color-mix(in oklch, var(--ctp-mauve), var(--ctp-lavender) 50%);
+          }
+
+          &:active {
+            transform: scale(0.96);
+          }
+        }
+      }
+
+      /* Options row (category + due date) */
+      .options-row {
+        display: flex;
+        gap: var(--space-sm);
+        flex-wrap: wrap;
+      }
+
+      .options-row select,
+      .options-row input[type="date"] {
+        padding: var(--space-sm) var(--space-md);
+        border: 2px solid var(--ctp-surface1);
+        border-radius: var(--radius-md);
+        background: var(--ctp-surface0);
+        color: var(--ctp-text);
+        font-family: inherit;
+        font-size: 0.85rem;
+        outline: none;
+        transition: border-color 0.2s;
+        min-block-size: var(--touch-min);
+
+        &:focus {
+          border-color: var(--ctp-mauve);
+          outline: 2px solid var(--ctp-mauve);
+          outline-offset: 2px;
+        }
+      }
+
+      .options-row select {
+        flex: 1;
+        min-inline-size: 0;
+        cursor: pointer;
+      }
+
+      .options-row input[type="date"] {
+        flex: 1;
+        min-inline-size: 0;
+        color-scheme: dark;
+
+        &::-webkit-calendar-picker-indicator {
+          filter: invert(0.7);
+          cursor: pointer;
+        }
+      }
+
+      /* Focus outlines for keyboard navigation */
+      :focus-visible {
+        outline: 2px solid var(--ctp-mauve);
+        outline-offset: 2px;
+      }
+
+      /* Filter and sort bar */
+      .toolbar {
+        display: flex;
+        gap: var(--space-sm);
+        align-items: stretch;
+      }
+
+      .filters {
+        display: flex;
+        gap: var(--space-xs);
+        background: var(--ctp-mantle);
+        padding: var(--space-xs);
+        border-radius: var(--radius-lg);
+        flex: 1;
+
+        & button {
+          flex: 1;
+          padding-block: 0.65rem;
+          padding-inline: var(--space-sm);
+          border: none;
+          border-radius: var(--radius-md);
+          background: transparent;
+          color: var(--ctp-overlay1);
+          font-family: inherit;
+          font-size: 0.85rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+          min-block-size: var(--touch-min);
+
+          &.active {
+            background: var(--ctp-surface0);
+            color: var(--ctp-text);
+          }
+
+          &:hover:not(.active) {
+            color: var(--ctp-subtext0);
+          }
+        }
+      }
+
+      .sort-select {
+        padding: var(--space-sm) var(--space-md);
+        border: none;
+        border-radius: var(--radius-lg);
+        background: var(--ctp-mantle);
+        color: var(--ctp-overlay1);
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+        min-block-size: var(--touch-min);
+        transition: color 0.2s;
+
+        &:focus {
+          outline: 2px solid var(--ctp-mauve);
+          outline-offset: 2px;
+        }
+
+        &:hover {
+          color: var(--ctp-subtext0);
+        }
+      }
+
+      /* Category filter bar */
+      .category-bar {
+        display: flex;
+        gap: var(--space-sm);
+        align-items: center;
+      }
+
+      .category-filters {
+        display: flex;
+        gap: var(--space-xs);
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding-block: 2px;
+        flex: 1;
+        min-inline-size: 0;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
+        & button {
+          padding: var(--space-xs) var(--space-md);
+          border: 1.5px solid var(--ctp-surface2);
+          border-radius: var(--radius-full);
+          background: transparent;
+          color: var(--ctp-overlay1);
+          font-family: inherit;
+          font-size: 0.75rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s, border-color 0.2s;
+          white-space: nowrap;
+          min-block-size: 32px;
+
+          &.active {
+            background: var(--ctp-surface0);
+            color: var(--ctp-text);
+            border-color: var(--ctp-surface0);
+          }
+
+          &:hover:not(.active) {
+            color: var(--ctp-subtext0);
+            border-color: var(--ctp-overlay0);
+          }
+        }
+      }
+
+      .manage-categories-btn {
+        background: none;
+        border: 1.5px solid var(--ctp-surface2);
+        border-radius: var(--radius-full);
+        color: var(--ctp-overlay1);
+        cursor: pointer;
+        padding: var(--space-xs);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: 32px;
+        min-block-size: 32px;
+        flex-shrink: 0;
+        transition: color 0.2s, border-color 0.2s, background 0.2s;
+
+        &:hover {
+          color: var(--ctp-subtext0);
+          border-color: var(--ctp-overlay0);
+          background: var(--ctp-surface0);
+        }
+
+        & svg {
+          inline-size: 14px;
+          block-size: 14px;
+        }
+      }
+
+      /* Category management dialog */
+      .category-dialog {
+        border: 1px solid var(--ctp-surface2);
+        border-radius: var(--radius-lg);
+        background: var(--ctp-surface0);
+        color: var(--ctp-text);
+        padding: var(--space-2xl);
+        max-inline-size: 420px;
+        inline-size: calc(100% - var(--space-2xl) * 2);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+        font-family: inherit;
+        animation: dialog-in 0.2s ease-out;
+
+        &::backdrop {
+          background: rgba(0, 0, 0, 0.6);
+        }
+      }
+
+      .category-dialog-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-block-end: var(--space-lg);
+      }
+
+      .category-dialog-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xs);
+        margin-block-end: var(--space-lg);
+      }
+
+      .category-dialog-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        padding: var(--space-sm) var(--space-md);
+        border-radius: var(--radius-md);
+        background: var(--ctp-mantle);
+
+        &.editing {
+          flex-wrap: wrap;
+        }
+      }
+
+      .category-dialog-dot {
+        inline-size: 10px;
+        block-size: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .category-dialog-label {
+        flex: 1;
+        font-size: 0.9rem;
+      }
+
+      .category-dialog-item-actions {
+        display: flex;
+        gap: 2px;
+      }
+
+      .category-edit-btn,
+      .category-delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: var(--space-xs);
+        border-radius: var(--radius-sm);
+        color: var(--ctp-overlay0);
+        transition: color 0.2s, background 0.2s;
+        display: flex;
+        align-items: center;
+        min-inline-size: 32px;
+        min-block-size: 32px;
+        justify-content: center;
+
+        & svg {
+          inline-size: 14px;
+          block-size: 14px;
+        }
+      }
+
+      .category-edit-btn:hover {
+        color: var(--ctp-blue);
+        background: var(--ctp-surface0);
+      }
+
+      .category-delete-btn:hover {
+        color: var(--ctp-red);
+        background: var(--ctp-surface0);
+      }
+
+      .category-edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        inline-size: 100%;
+        padding-block-start: var(--space-sm);
+      }
+
+      .category-edit-form input[type="text"] {
+        padding: var(--space-sm) var(--space-md);
+        border: 2px solid var(--ctp-surface2);
+        border-radius: var(--radius-md);
+        background: var(--ctp-surface0);
+        color: var(--ctp-text);
+        font-family: inherit;
+        font-size: 0.85rem;
+        outline: none;
+
+        &:focus {
+          border-color: var(--ctp-mauve);
+        }
+      }
+
+      .category-edit-form-actions {
+        display: flex;
+        gap: var(--space-sm);
+        justify-content: flex-end;
+      }
+
+      .category-edit-form-actions button {
+        padding: var(--space-xs) var(--space-md);
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        min-block-size: 32px;
+        transition: background 0.2s;
+      }
+
+      .color-picker {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+      }
+
+      .color-swatch {
+        inline-size: 22px;
+        block-size: 22px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: border-color 0.15s, transform 0.1s;
+        padding: 0;
+
+        &:hover {
+          transform: scale(1.15);
+        }
+
+        &.selected {
+          border-color: var(--ctp-text);
+          transform: scale(1.15);
+        }
+      }
+
+      .add-category-form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        padding-block-start: var(--space-lg);
+        border-block-start: 1px solid var(--ctp-surface2);
+      }
+
+      .add-category-form-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--ctp-subtext0);
+      }
+
+      .add-category-form input[type="text"] {
+        padding: var(--space-sm) var(--space-md);
+        border: 2px solid var(--ctp-surface2);
+        border-radius: var(--radius-md);
+        background: var(--ctp-mantle);
+        color: var(--ctp-text);
+        font-family: inherit;
+        font-size: 0.85rem;
+        outline: none;
+
+        &:focus {
+          border-color: var(--ctp-mauve);
+        }
+
+        &::placeholder {
+          color: var(--ctp-overlay0);
+        }
+      }
+
+      .add-category-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .add-category-btn {
+        padding: var(--space-xs) var(--space-lg);
+        border: none;
+        border-radius: var(--radius-md);
+        background: var(--ctp-green);
+        color: var(--ctp-crust);
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        min-block-size: 32px;
+        transition: background 0.2s, transform 0.1s;
+
+        &:hover {
+          background: color-mix(in oklch, var(--ctp-green), var(--ctp-teal) 40%);
+        }
+
+        &:active {
+          transform: scale(0.96);
+        }
+      }
+
+      .category-dialog-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding-block-start: var(--space-lg);
+      }
+
+      .category-dialog-done-btn {
+        padding: var(--space-sm) var(--space-xl);
+        border: none;
+        border-radius: var(--radius-md);
+        background: var(--ctp-surface2);
+        color: var(--ctp-text);
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        min-block-size: var(--touch-min);
+        transition: background 0.2s;
+
+        &:hover {
+          background: var(--ctp-overlay0);
+        }
+      }
+
+      /* Todo list */
+      .todo-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+
+      .todo-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding: 0.85rem var(--space-lg);
+        background: var(--ctp-surface0);
+        border-radius: var(--radius-lg);
+        transition: background 0.2s, opacity 0.3s, transform 0.3s;
+
+        &.new-item {
+          animation: slide-in 0.25s ease-out;
+        }
+
+        &.completed {
+          opacity: 0.55;
+
+          & .todo-text {
+            text-decoration: line-through;
+            color: var(--ctp-overlay0);
+          }
+        }
+      }
+
+      @keyframes slide-in {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Custom checkbox */
+      .checkbox {
+        position: relative;
+        inline-size: var(--touch-min);
+        block-size: var(--touch-min);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        & input {
+          position: absolute;
+          opacity: 0;
+          inline-size: 100%;
+          block-size: 100%;
+          cursor: pointer;
+          margin: 0;
+        }
+
+        & .checkmark {
+          inline-size: 22px;
+          block-size: 22px;
+          border: 2px solid var(--ctp-overlay0);
+          border-radius: var(--radius-sm);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.2s, border-color 0.2s;
+          pointer-events: none;
+
+          & svg {
+            inline-size: 14px;
+            block-size: 14px;
+            fill: none;
+            stroke: var(--ctp-crust);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0;
+            transition: opacity 0.15s;
+          }
+        }
+
+        & input:checked + .checkmark {
+          background: var(--ctp-green);
+          border-color: var(--ctp-green);
+
+          & svg {
+            opacity: 1;
+          }
+        }
+      }
+
+      .todo-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        overflow: hidden;
+      }
+
+      .todo-text {
+        font-size: 0.95rem;
+        color: var(--ctp-text);
+        overflow-wrap: break-word;
+      }
+
+      .todo-meta {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        flex-wrap: wrap;
+      }
+
+      .category-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 1px var(--space-sm);
+        border-radius: var(--radius-full);
+        background: color-mix(in oklch, var(--badge-color) 15%, transparent);
+        color: var(--badge-color);
+        letter-spacing: 0.01em;
+      }
+
+      .category-dot {
+        inline-size: 6px;
+        block-size: 6px;
+        border-radius: 50%;
+        background: var(--badge-color);
+      }
+
+      .countdown {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 1px var(--space-sm);
+        border-radius: var(--radius-full);
+        letter-spacing: 0;
+      }
+
+      .countdown.overdue {
+        background: color-mix(in oklch, var(--ctp-red) 15%, transparent);
+        color: var(--ctp-red);
+      }
+
+      .countdown.due-soon {
+        background: color-mix(in oklch, var(--ctp-peach) 15%, transparent);
+        color: var(--ctp-peach);
+      }
+
+      .countdown.due-later {
+        background: color-mix(in oklch, var(--ctp-green) 15%, transparent);
+        color: var(--ctp-green);
+      }
+
+      .todo-actions {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      .edit-btn,
+      .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: var(--space-md);
+        border-radius: var(--radius-sm);
+        color: var(--ctp-overlay0);
+        transition: color 0.2s, background 0.2s;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        min-inline-size: var(--touch-min);
+        min-block-size: var(--touch-min);
+        justify-content: center;
+
+        & svg {
+          inline-size: 18px;
+          block-size: 18px;
+        }
+      }
+
+      .edit-btn:hover {
+        color: var(--ctp-blue);
+        background: var(--ctp-surface1);
+      }
+
+      .delete-btn:hover {
+        color: var(--ctp-red);
+        background: var(--ctp-surface1);
+      }
+
+      /* Inline edit form */
+      .todo-item.editing {
+        flex-wrap: wrap;
+      }
+
+      .edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        inline-size: 100%;
+        padding-block-start: var(--space-sm);
+      }
+
+      .edit-form input[type="text"] {
+        padding: var(--space-sm) var(--space-md);
+        border: 2px solid var(--ctp-surface2);
+        border-radius: var(--radius-md);
+        background: var(--ctp-mantle);
+        color: var(--ctp-text);
+        font-family: inherit;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+
+        &:focus {
+          border-color: var(--ctp-mauve);
+        }
+      }
+
+      .edit-form-row {
+        display: flex;
+        gap: var(--space-sm);
+        flex-wrap: wrap;
+      }
+
+      .edit-form select,
+      .edit-form input[type="date"] {
+        flex: 1;
+        padding: var(--space-sm) var(--space-md);
+        border: 2px solid var(--ctp-surface2);
+        border-radius: var(--radius-md);
+        background: var(--ctp-mantle);
+        color: var(--ctp-text);
+        font-family: inherit;
+        font-size: 0.85rem;
+        outline: none;
+        min-block-size: 36px;
+        cursor: pointer;
+
+        &:focus {
+          border-color: var(--ctp-mauve);
+        }
+      }
+
+      .edit-form input[type="date"] {
+        color-scheme: dark;
+
+        &::-webkit-calendar-picker-indicator {
+          filter: invert(0.7);
+          cursor: pointer;
+        }
+      }
+
+      .edit-form-actions {
+        display: flex;
+        gap: var(--space-sm);
+        justify-content: flex-end;
+      }
+
+      .edit-form-actions button {
+        padding: var(--space-xs) var(--space-md);
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        min-block-size: 32px;
+        transition: background 0.2s, transform 0.1s;
+
+        &:active {
+          transform: scale(0.96);
+        }
+      }
+
+      .edit-save-btn {
+        background: var(--ctp-green);
+        color: var(--ctp-crust);
+
+        &:hover {
+          background: color-mix(in oklch, var(--ctp-green), var(--ctp-teal) 40%);
+        }
+      }
+
+      .edit-cancel-btn {
+        background: var(--ctp-surface1);
+        color: var(--ctp-subtext0);
+
+        &:hover {
+          background: var(--ctp-surface2);
+        }
+      }
+
+      /* Undo toast */
+      .toast-container {
+        position: fixed;
+        inset-block-end: env(safe-area-inset-bottom, var(--space-2xl));
+        inset-inline: 0;
+        display: flex;
+        justify-content: center;
+        padding-inline: var(--space-lg);
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      .toast {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding: var(--space-md) var(--space-lg);
+        background: var(--ctp-surface1);
+        border-radius: var(--radius-lg);
+        color: var(--ctp-text);
+        font-size: 0.85rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        pointer-events: auto;
+        animation: toast-in 0.25s ease-out;
+        max-inline-size: 400px;
+      }
+
+      .toast.toast-out {
+        animation: toast-out 0.2s ease-in forwards;
+      }
+
+      .toast-message {
+        flex: 1;
+      }
+
+      .toast-undo-btn {
+        padding: var(--space-xs) var(--space-md);
+        border: none;
+        border-radius: var(--radius-md);
+        background: var(--ctp-mauve);
+        color: var(--ctp-crust);
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+
+        &:hover {
+          background: color-mix(in oklch, var(--ctp-mauve), var(--ctp-lavender) 50%);
+        }
+      }
+
+      @keyframes toast-in {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes toast-out {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(12px); }
+      }
+
+      /* Delete confirmation dialog */
+      .confirm-dialog {
+        border: 1px solid var(--ctp-surface2);
+        border-radius: var(--radius-lg);
+        background: var(--ctp-surface0);
+        color: var(--ctp-text);
+        padding: var(--space-2xl);
+        max-inline-size: 360px;
+        inline-size: calc(100% - var(--space-2xl) * 2);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+        font-family: inherit;
+        animation: dialog-in 0.2s ease-out;
+
+        &::backdrop {
+          background: rgba(0, 0, 0, 0.6);
+        }
+      }
+
+      .confirm-dialog-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-block-end: var(--space-sm);
+      }
+
+      .confirm-dialog-text {
+        font-size: 0.9rem;
+        color: var(--ctp-subtext0);
+        margin-block-end: var(--space-xl);
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .confirm-dialog-actions {
+        display: flex;
+        gap: var(--space-sm);
+        justify-content: flex-end;
+      }
+
+      .confirm-dialog-actions button {
+        padding: var(--space-sm) var(--space-lg);
+        border: none;
+        border-radius: var(--radius-md);
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        min-block-size: var(--touch-min);
+        transition: background 0.2s;
+      }
+
+      .confirm-cancel-btn {
+        background: var(--ctp-surface2);
+        color: var(--ctp-text);
+
+        &:hover {
+          background: var(--ctp-overlay0);
+        }
+      }
+
+      .confirm-delete-btn {
+        background: var(--ctp-red);
+        color: var(--ctp-crust);
+
+        &:hover {
+          background: color-mix(in oklch, var(--ctp-red), var(--ctp-maroon) 50%);
+        }
+      }
+
+      @keyframes dialog-in {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: var(--space-4xl) var(--space-lg);
+        color: var(--ctp-overlay0);
+
+        & .icon {
+          font-size: 2.5rem;
+          margin-block-end: var(--space-md);
+          opacity: 0.6;
+        }
+
+        & p {
+          font-size: 0.95rem;
+          text-wrap: balance;
+        }
+      }
+
+      /* Clear completed */
+      .clear-completed {
+        background: none;
+        border: 1px solid var(--ctp-surface2);
+        color: var(--ctp-overlay1);
+        padding: var(--space-sm) var(--space-lg);
+        border-radius: var(--radius-md);
+        font-family: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: color 0.2s, border-color 0.2s;
+        align-self: center;
+        min-block-size: var(--touch-min);
+
+        &:hover {
+          color: var(--ctp-red);
+          border-color: var(--ctp-red);
+        }
+      }
+    }
+
+    @layer a11y {
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (prefers-contrast: more) {
+        .todo-item {
+          border: 1px solid var(--ctp-overlay0);
+        }
+
+        .filters button.active {
+          border: 2px solid var(--ctp-text);
+        }
+
+        .todo-item.completed {
+          opacity: 0.7;
+        }
       }
     }
   </style>
@@ -352,10 +1126,34 @@
       <button id="add-btn">Add</button>
     </div>
 
-    <div class="filters" role="tablist" aria-label="Filter todos">
-      <button class="active" role="tab" aria-selected="true" data-filter="all">All</button>
-      <button role="tab" aria-selected="false" data-filter="active">Active</button>
-      <button role="tab" aria-selected="false" data-filter="completed">Done</button>
+    <div class="options-row">
+      <select id="category-select" aria-label="Category"></select>
+      <input type="date" id="due-date-input" aria-label="Due date (optional)">
+    </div>
+
+    <div class="toolbar">
+      <div class="filters" role="tablist" aria-label="Filter todos">
+        <button class="active" role="tab" aria-selected="true" data-filter="all">All</button>
+        <button role="tab" aria-selected="false" data-filter="active">Active</button>
+        <button role="tab" aria-selected="false" data-filter="completed">Done</button>
+      </div>
+      <select class="sort-select" id="sort-select" aria-label="Sort todos">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="alpha-az">A &rarr; Z</option>
+        <option value="alpha-za">Z &rarr; A</option>
+        <option value="category">Category</option>
+        <option value="due-date">Due date</option>
+      </select>
+    </div>
+
+    <div class="category-bar">
+      <div class="category-filters" id="category-filters" aria-label="Filter by category"></div>
+      <button class="manage-categories-btn" id="manage-categories-btn" aria-label="Manage categories">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+        </svg>
+      </button>
     </div>
 
     <ul class="todo-list" id="todo-list" aria-live="polite"></ul>
@@ -363,12 +1161,94 @@
     <button class="clear-completed" id="clear-completed" style="display:none;">Clear completed</button>
   </main>
 
+  <div class="toast-container" id="toast-container"></div>
+
+  <dialog class="confirm-dialog" id="delete-dialog">
+    <p class="confirm-dialog-title">Delete task</p>
+    <p class="confirm-dialog-text" id="delete-dialog-text"></p>
+    <div class="confirm-dialog-actions">
+      <button class="confirm-cancel-btn" id="delete-dialog-cancel">Cancel</button>
+      <button class="confirm-delete-btn" id="delete-dialog-confirm">Delete</button>
+    </div>
+  </dialog>
+
+  <dialog class="category-dialog" id="category-dialog">
+    <p class="category-dialog-title">Manage Categories</p>
+    <ul class="category-dialog-list" id="category-dialog-list"></ul>
+    <div class="add-category-form" id="add-category-form">
+      <p class="add-category-form-title">New category</p>
+      <input type="text" id="new-category-name" placeholder="Category name" maxlength="30">
+      <div class="color-picker" id="new-category-color-picker"></div>
+      <div class="add-category-actions">
+        <button class="add-category-btn" id="add-category-btn">Add</button>
+      </div>
+    </div>
+    <div class="category-dialog-footer">
+      <button class="category-dialog-done-btn" id="category-dialog-done">Done</button>
+    </div>
+  </dialog>
+
   <script>
     const STORAGE_KEY = 'catppuccin-todos';
+    const CATEGORIES_STORAGE_KEY = 'catppuccin-categories';
+    const MAX_UNDO = 50;
+
+    const DEFAULT_CATEGORIES = {
+      general:  { label: 'General',  color: 'var(--ctp-overlay2)' },
+      work:     { label: 'Work',     color: 'var(--ctp-blue)' },
+      personal: { label: 'Personal', color: 'var(--ctp-mauve)' },
+      health:   { label: 'Health',   color: 'var(--ctp-green)' },
+      finance:  { label: 'Finance',  color: 'var(--ctp-yellow)' },
+      learning: { label: 'Learning', color: 'var(--ctp-sapphire)' },
+    };
+
+    const PALETTE = [
+      'var(--ctp-rosewater)', 'var(--ctp-flamingo)', 'var(--ctp-pink)', 'var(--ctp-mauve)',
+      'var(--ctp-red)', 'var(--ctp-maroon)', 'var(--ctp-peach)', 'var(--ctp-yellow)',
+      'var(--ctp-green)', 'var(--ctp-teal)', 'var(--ctp-sky)', 'var(--ctp-sapphire)',
+      'var(--ctp-blue)', 'var(--ctp-lavender)', 'var(--ctp-overlay2)',
+    ];
+
+    function loadCategories() {
+      try {
+        const data = JSON.parse(localStorage.getItem(CATEGORIES_STORAGE_KEY));
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return { ...DEFAULT_CATEGORIES };
+        // Ensure 'general' always exists
+        if (!data.general) data.general = { ...DEFAULT_CATEGORIES.general };
+        // Validate each entry
+        const result = {};
+        for (const [key, val] of Object.entries(data)) {
+          if (val && typeof val.label === 'string' && typeof val.color === 'string') {
+            result[key] = { label: val.label, color: val.color };
+          }
+        }
+        if (!result.general) result.general = { ...DEFAULT_CATEGORIES.general };
+        return result;
+      } catch {
+        return { ...DEFAULT_CATEGORIES };
+      }
+    }
+
+    function saveCategories() {
+      try {
+        localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(CATEGORIES));
+      } catch {
+        // localStorage quota exceeded
+      }
+    }
+
+    let CATEGORIES = loadCategories();
 
     let todos = loadTodos();
     let currentFilter = 'all';
+    let currentCategory = 'all';
+    let currentSort = 'newest';
     let lastAddedId = null;
+    let editingId = null;
+    let editingCategoryKey = null;
+    let newCategoryColor = PALETTE[0];
+    let undoStack = [];
+    let toastTimer = null;
 
     const input = document.getElementById('todo-input');
     const addBtn = document.getElementById('add-btn');
@@ -376,16 +1256,42 @@
     const taskCount = document.getElementById('task-count');
     const clearBtn = document.getElementById('clear-completed');
     const filterBtns = document.querySelectorAll('.filters button');
+    const categorySelect = document.getElementById('category-select');
+    const dueDateInput = document.getElementById('due-date-input');
+    const sortSelect = document.getElementById('sort-select');
+    const categoryFiltersContainer = document.getElementById('category-filters');
+    const toastContainer = document.getElementById('toast-container');
+    const deleteDialog = document.getElementById('delete-dialog');
+    const deleteDialogText = document.getElementById('delete-dialog-text');
+    const deleteDialogCancel = document.getElementById('delete-dialog-cancel');
+    const deleteDialogConfirm = document.getElementById('delete-dialog-confirm');
+    const categoryDialog = document.getElementById('category-dialog');
+    const categoryDialogList = document.getElementById('category-dialog-list');
+    const manageCategoriesBtn = document.getElementById('manage-categories-btn');
+    const addCategoryBtn = document.getElementById('add-category-btn');
+    const newCategoryNameInput = document.getElementById('new-category-name');
+    const newCategoryColorPicker = document.getElementById('new-category-color-picker');
+    const categoryDialogDone = document.getElementById('category-dialog-done');
+    let pendingDeleteId = null;
 
     function loadTodos() {
       try {
         const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
         if (!Array.isArray(data)) return [];
-        return data.filter(item =>
-          item && typeof item.id === 'string' &&
-          typeof item.text === 'string' &&
-          typeof item.completed === 'boolean'
-        );
+        return data
+          .filter(item =>
+            item && typeof item.id === 'string' &&
+            typeof item.text === 'string' &&
+            typeof item.completed === 'boolean'
+          )
+          .map(item => ({
+            id: item.id,
+            text: item.text,
+            completed: item.completed,
+            category: item.category && CATEGORIES[item.category] ? item.category : 'general',
+            createdAt: item.createdAt || Date.now(),
+            dueDate: item.dueDate || null,
+          }));
       } catch {
         return [];
       }
@@ -399,47 +1305,407 @@
       }
     }
 
-    function generateId() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    // --- Undo system ---
+    function pushUndo(label) {
+      undoStack.push({ label, snapshot: JSON.stringify(todos), categoriesSnapshot: JSON.stringify(CATEGORIES) });
+      if (undoStack.length > MAX_UNDO) undoStack.shift();
     }
 
+    function undo() {
+      if (undoStack.length === 0) return;
+      const entry = undoStack.pop();
+      todos = JSON.parse(entry.snapshot);
+      if (entry.categoriesSnapshot) {
+        CATEGORIES = JSON.parse(entry.categoriesSnapshot);
+        saveCategories();
+        renderCategoryFilters();
+        renderCategorySelect();
+      }
+      editingId = null;
+      save();
+      render();
+      dismissToast();
+    }
+
+    function showToast(message) {
+      dismissToast();
+      toastContainer.innerHTML = `
+        <div class="toast">
+          <span class="toast-message">${escapeHtml(message)}</span>
+          <button class="toast-undo-btn" id="toast-undo">Undo</button>
+        </div>`;
+      document.getElementById('toast-undo').addEventListener('click', undo);
+      toastTimer = setTimeout(() => dismissToast(), 5000);
+    }
+
+    function dismissToast() {
+      clearTimeout(toastTimer);
+      const toast = toastContainer.querySelector('.toast');
+      if (toast) {
+        toast.classList.add('toast-out');
+        toast.addEventListener('animationend', () => {
+          toastContainer.innerHTML = '';
+        }, { once: true });
+      }
+    }
+
+    // --- CRUD operations ---
     function addTodo(text) {
       text = text.trim();
       if (!text) return;
-      const id = generateId();
+      pushUndo('Task added');
+      const id = crypto.randomUUID();
       lastAddedId = id;
-      todos.unshift({ id, text, completed: false });
+      const category = categorySelect.value;
+      const dueDate = dueDateInput.value || null;
+      todos.unshift({ id, text, completed: false, category, createdAt: Date.now(), dueDate });
       save();
       render();
+      showToast('Task added');
       input.value = '';
+      dueDateInput.value = '';
       input.focus();
     }
 
     function toggleTodo(id) {
       const todo = todos.find(t => t.id === id);
-      if (todo) todo.completed = !todo.completed;
+      if (!todo) return;
+      const label = todo.completed ? 'Marked active' : 'Marked done';
+      pushUndo(label);
+      todo.completed = !todo.completed;
       save();
       render();
+      showToast(label);
     }
 
     function deleteTodo(id) {
+      const todo = todos.find(t => t.id === id);
+      if (!todo) return;
+      pendingDeleteId = id;
+      deleteDialogText.textContent = `"${todo.text.length > 60 ? todo.text.slice(0, 60) + '...' : todo.text}"`;
+      deleteDialog.showModal();
+    }
+
+    function confirmDelete() {
+      const id = pendingDeleteId;
+      pendingDeleteId = null;
+      deleteDialog.close();
+      const todo = todos.find(t => t.id === id);
+      pushUndo('Task deleted');
       todos = todos.filter(t => t.id !== id);
       save();
       render();
+      showToast(`Deleted "${todo ? todo.text.slice(0, 30) : 'task'}${todo && todo.text.length > 30 ? '...' : ''}"`);
+    }
+
+    function cancelDelete() {
+      pendingDeleteId = null;
+      deleteDialog.close();
     }
 
     function clearCompleted() {
+      const count = todos.filter(t => t.completed).length;
+      if (count === 0) return;
+      pushUndo('Cleared completed');
       todos = todos.filter(t => !t.completed);
       save();
       render();
+      showToast(`Cleared ${count} completed task${count !== 1 ? 's' : ''}`);
     }
 
+    // --- Category management ---
+    function generateCategoryKey(label) {
+      let key = label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      if (!key) key = 'category';
+      let finalKey = key;
+      let counter = 1;
+      while (CATEGORIES[finalKey]) {
+        finalKey = `${key}-${counter}`;
+        counter++;
+      }
+      return finalKey;
+    }
+
+    function getColorName(cssVar) {
+      const match = cssVar.match(/--ctp-(\w+)/);
+      return match ? match[1].charAt(0).toUpperCase() + match[1].slice(1) : '';
+    }
+
+    function renderCategorySelect() {
+      const currentValue = categorySelect.value;
+      categorySelect.innerHTML = Object.entries(CATEGORIES).map(([key, cat]) =>
+        `<option value="${escapeAttr(key)}">${escapeHtml(cat.label)}</option>`
+      ).join('');
+      if (CATEGORIES[currentValue]) categorySelect.value = currentValue;
+    }
+
+    function renderCategoryFilters() {
+      categoryFiltersContainer.innerHTML =
+        `<button class="${currentCategory === 'all' ? 'active' : ''}" data-category="all">All</button>` +
+        Object.entries(CATEGORIES).map(([key, cat]) =>
+          `<button class="${currentCategory === key ? 'active' : ''}" data-category="${escapeAttr(key)}">${escapeHtml(cat.label)}</button>`
+        ).join('');
+    }
+
+    function renderColorPicker(container, selectedColor, onSelect) {
+      container.innerHTML = PALETTE.map(color =>
+        `<button type="button" class="color-swatch ${color === selectedColor ? 'selected' : ''}" data-color="${escapeAttr(color)}" style="background: ${color}" aria-label="${getColorName(color)}"></button>`
+      ).join('');
+      container.onclick = (e) => {
+        const swatch = e.target.closest('.color-swatch');
+        if (!swatch) return;
+        container.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+        swatch.classList.add('selected');
+        onSelect(swatch.dataset.color);
+      };
+    }
+
+    function renderCategoryDialog() {
+      categoryDialogList.innerHTML = Object.entries(CATEGORIES).map(([key, cat]) => {
+        const isGeneral = key === 'general';
+        const isEditing = key === editingCategoryKey;
+
+        if (isEditing) {
+          return `
+          <li class="category-dialog-item editing" data-key="${escapeAttr(key)}">
+            <span class="category-dialog-dot" style="background: ${cat.color}"></span>
+            <span class="category-dialog-label">${escapeHtml(cat.label)}</span>
+            <div class="category-edit-form">
+              <input type="text" value="${escapeAttr(cat.label)}" maxlength="30" aria-label="Category name" id="edit-category-name">
+              <div class="color-picker" id="edit-category-color-picker"></div>
+              <div class="category-edit-form-actions">
+                <button class="edit-cancel-btn" data-action="cancel-edit-category">Cancel</button>
+                <button class="edit-save-btn" data-action="save-edit-category">Save</button>
+              </div>
+            </div>
+          </li>`;
+        }
+
+        return `
+        <li class="category-dialog-item" data-key="${escapeAttr(key)}">
+          <span class="category-dialog-dot" style="background: ${cat.color}"></span>
+          <span class="category-dialog-label">${escapeHtml(cat.label)}</span>
+          <div class="category-dialog-item-actions">
+            <button class="category-edit-btn" data-action="edit-category" aria-label="Edit ${escapeAttr(cat.label)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+              </svg>
+            </button>
+            ${isGeneral ? '' : `
+            <button class="category-delete-btn" data-action="delete-category" aria-label="Delete ${escapeAttr(cat.label)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>`}
+          </div>
+        </li>`;
+      }).join('');
+
+      // Wire up color picker for editing category
+      if (editingCategoryKey) {
+        const pickerEl = document.getElementById('edit-category-color-picker');
+        if (pickerEl) {
+          renderColorPicker(pickerEl, CATEGORIES[editingCategoryKey].color, () => {});
+        }
+        const editInput = document.getElementById('edit-category-name');
+        if (editInput) {
+          editInput.focus();
+          editInput.setSelectionRange(editInput.value.length, editInput.value.length);
+        }
+      }
+    }
+
+    function openCategoryDialog() {
+      editingCategoryKey = null;
+      newCategoryColor = PALETTE[0];
+      newCategoryNameInput.value = '';
+      renderCategoryDialog();
+      renderColorPicker(newCategoryColorPicker, newCategoryColor, (color) => { newCategoryColor = color; });
+      categoryDialog.showModal();
+    }
+
+    function addCategory() {
+      const label = newCategoryNameInput.value.trim();
+      if (!label) return;
+      const key = generateCategoryKey(label);
+      CATEGORIES[key] = { label, color: newCategoryColor };
+      saveCategories();
+      newCategoryNameInput.value = '';
+      newCategoryColor = PALETTE[0];
+      renderColorPicker(newCategoryColorPicker, newCategoryColor, (color) => { newCategoryColor = color; });
+      renderCategoryDialog();
+      renderCategoryFilters();
+      renderCategorySelect();
+    }
+
+    function startEditCategory(key) {
+      if (!CATEGORIES[key]) return;
+      editingCategoryKey = key;
+      renderCategoryDialog();
+    }
+
+    function saveEditCategory() {
+      const key = editingCategoryKey;
+      if (!key || !CATEGORIES[key]) return;
+      const nameInput = document.getElementById('edit-category-name');
+      const pickerEl = document.getElementById('edit-category-color-picker');
+      if (!nameInput) return;
+      const newLabel = nameInput.value.trim();
+      if (!newLabel) return;
+      const selectedSwatch = pickerEl?.querySelector('.color-swatch.selected');
+      const newColor = selectedSwatch ? selectedSwatch.dataset.color : CATEGORIES[key].color;
+
+      CATEGORIES[key] = { label: newLabel, color: newColor };
+      editingCategoryKey = null;
+      saveCategories();
+      renderCategoryDialog();
+      renderCategoryFilters();
+      renderCategorySelect();
+      render();
+    }
+
+    function cancelEditCategory() {
+      editingCategoryKey = null;
+      renderCategoryDialog();
+    }
+
+    function deleteCategory(key) {
+      if (key === 'general' || !CATEGORIES[key]) return;
+      const label = CATEGORIES[key].label;
+      pushUndo('Category deleted');
+      todos.forEach(t => {
+        if (t.category === key) t.category = 'general';
+      });
+      delete CATEGORIES[key];
+      if (currentCategory === key) currentCategory = 'all';
+      editingCategoryKey = null;
+      saveCategories();
+      save();
+      renderCategoryDialog();
+      renderCategoryFilters();
+      renderCategorySelect();
+      render();
+      showToast(`Deleted "${label}" category`);
+    }
+
+    function startEdit(id) {
+      editingId = id;
+      render();
+      const editInput = list.querySelector('.edit-form input[type="text"]');
+      if (editInput) {
+        editInput.focus();
+        editInput.setSelectionRange(editInput.value.length, editInput.value.length);
+      }
+    }
+
+    function saveEdit(id) {
+      const form = list.querySelector(`.todo-item[data-id="${CSS.escape(id)}"] .edit-form`);
+      if (!form) return;
+      const newText = form.querySelector('input[type="text"]').value.trim();
+      if (!newText) return;
+      const newCategory = form.querySelector('select').value;
+      const newDueDate = form.querySelector('input[type="date"]').value || null;
+
+      const todo = todos.find(t => t.id === id);
+      if (!todo) return;
+
+      if (todo.text === newText && todo.category === newCategory && todo.dueDate === newDueDate) {
+        editingId = null;
+        render();
+        return;
+      }
+
+      pushUndo('Task edited');
+      todo.text = newText;
+      todo.category = newCategory;
+      todo.dueDate = newDueDate;
+      editingId = null;
+      save();
+      render();
+      showToast('Task updated');
+    }
+
+    function cancelEdit() {
+      editingId = null;
+      render();
+    }
+
+    // --- Filtering & sorting ---
     function getFiltered() {
-      if (currentFilter === 'active') return todos.filter(t => !t.completed);
-      if (currentFilter === 'completed') return todos.filter(t => t.completed);
-      return todos;
+      let result = todos;
+
+      if (currentFilter === 'active') result = result.filter(t => !t.completed);
+      if (currentFilter === 'completed') result = result.filter(t => t.completed);
+
+      if (currentCategory !== 'all') {
+        result = result.filter(t => t.category === currentCategory);
+      }
+
+      return result;
     }
 
+    function getSorted(items) {
+      const sorted = [...items];
+      switch (currentSort) {
+        case 'newest':
+          sorted.sort((a, b) => b.createdAt - a.createdAt);
+          break;
+        case 'oldest':
+          sorted.sort((a, b) => a.createdAt - b.createdAt);
+          break;
+        case 'alpha-az':
+          sorted.sort((a, b) => a.text.localeCompare(b.text));
+          break;
+        case 'alpha-za':
+          sorted.sort((a, b) => b.text.localeCompare(a.text));
+          break;
+        case 'category':
+          sorted.sort((a, b) => a.category.localeCompare(b.category));
+          break;
+        case 'due-date':
+          sorted.sort((a, b) => {
+            if (!a.dueDate && !b.dueDate) return 0;
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return a.dueDate.localeCompare(b.dueDate);
+          });
+          break;
+      }
+      return sorted;
+    }
+
+    function formatCountdown(dueDate) {
+      if (!dueDate) return null;
+      const now = new Date();
+      const due = new Date(dueDate + 'T23:59:59');
+      const diffMs = due - now;
+      const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+      let text;
+      let cls;
+
+      if (diffDays < 0) {
+        const overdueDays = Math.abs(diffDays);
+        text = overdueDays === 1 ? '1d overdue' : `${overdueDays}d overdue`;
+        cls = 'overdue';
+      } else if (diffDays === 0) {
+        text = 'Due today';
+        cls = 'due-soon';
+      } else if (diffDays === 1) {
+        text = 'Due tomorrow';
+        cls = 'due-soon';
+      } else if (diffDays <= 3) {
+        text = `${diffDays}d left`;
+        cls = 'due-soon';
+      } else {
+        text = `${diffDays}d left`;
+        cls = 'due-later';
+      }
+
+      return { text, cls };
+    }
+
+    // --- Rendering helpers ---
     function escapeAttr(str) {
       return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
@@ -450,8 +1716,30 @@
       return div.innerHTML;
     }
 
+    function categoryOptionsHtml(selected) {
+      return Object.entries(CATEGORIES).map(([key, cat]) =>
+        `<option value="${key}" ${key === selected ? 'selected' : ''}>${escapeHtml(cat.label)}</option>`
+      ).join('');
+    }
+
+    function renderEditForm(todo) {
+      return `
+        <div class="edit-form">
+          <input type="text" value="${escapeAttr(todo.text)}" maxlength="500" aria-label="Edit task text">
+          <div class="edit-form-row">
+            <select aria-label="Edit category">${categoryOptionsHtml(todo.category)}</select>
+            <input type="date" value="${todo.dueDate || ''}" aria-label="Edit due date">
+          </div>
+          <div class="edit-form-actions">
+            <button class="edit-cancel-btn" data-action="cancel-edit">Cancel</button>
+            <button class="edit-save-btn" data-action="save-edit">Save</button>
+          </div>
+        </div>`;
+    }
+
     function render() {
-      const filtered = getFiltered();
+      renderCategoryFilters();
+      const filtered = getSorted(getFiltered());
       const activeCount = todos.filter(t => !t.completed).length;
       const completedCount = todos.filter(t => t.completed).length;
 
@@ -462,6 +1750,7 @@
         let msg = 'Add a task to get started';
         if (currentFilter === 'active') msg = 'No active tasks';
         if (currentFilter === 'completed') msg = 'No completed tasks';
+        if (currentCategory !== 'all') msg = `No ${escapeHtml(CATEGORIES[currentCategory]?.label || '')} tasks`.trim();
         list.innerHTML = `
           <li class="empty-state">
             <div class="icon">${currentFilter === 'completed' ? '\u2713' : '\u2610'}</div>
@@ -473,9 +1762,38 @@
 
       list.innerHTML = filtered.map(todo => {
         const isNew = todo.id === lastAddedId;
+        const isEditing = todo.id === editingId;
         const escapedText = escapeHtml(todo.text);
         const escapedId = escapeAttr(todo.id);
         const statusLabel = todo.completed ? 'incomplete' : 'complete';
+        const cat = CATEGORIES[todo.category] || CATEGORIES.general;
+        const countdown = formatCountdown(todo.dueDate);
+
+        if (isEditing) {
+          return `
+          <li class="todo-item editing" data-id="${escapedId}">
+            <div class="todo-content">
+              <span class="todo-text">${escapedText}</span>
+            </div>
+            ${renderEditForm(todo)}
+          </li>`;
+        }
+
+        let metaHtml = '';
+        const isDefaultGeneral = todo.category === 'general' && cat.label === DEFAULT_CATEGORIES.general.label;
+        const showCategoryBadge = !isDefaultGeneral;
+        const hasMeta = showCategoryBadge || countdown;
+        if (hasMeta) {
+          metaHtml = '<div class="todo-meta">';
+          if (showCategoryBadge) {
+            metaHtml += `<span class="category-badge" style="--badge-color: ${cat.color}"><span class="category-dot"></span>${escapeHtml(cat.label)}</span>`;
+          }
+          if (countdown) {
+            metaHtml += `<span class="countdown ${countdown.cls}">${escapeHtml(countdown.text)}</span>`;
+          }
+          metaHtml += '</div>';
+        }
+
         return `
         <li class="todo-item ${todo.completed ? 'completed' : ''} ${isNew ? 'new-item' : ''}" data-id="${escapedId}">
           <label class="checkbox">
@@ -484,19 +1802,29 @@
               <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
           </label>
-          <span class="todo-text">${escapedText}</span>
-          <button class="delete-btn" aria-label="Delete ${escapeAttr(todo.text)}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
+          <div class="todo-content">
+            <span class="todo-text">${escapedText}</span>
+            ${metaHtml}
+          </div>
+          <div class="todo-actions">
+            <button class="edit-btn" aria-label="Edit ${escapeAttr(todo.text)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+              </svg>
+            </button>
+            <button class="delete-btn" aria-label="Delete ${escapeAttr(todo.text)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
         </li>`;
       }).join('');
 
       lastAddedId = null;
     }
 
-    // Event listeners
+    // --- Event listeners ---
     addBtn.addEventListener('click', () => addTodo(input.value));
 
     input.addEventListener('keydown', e => {
@@ -511,14 +1839,43 @@
     });
 
     list.addEventListener('click', e => {
-      const btn = e.target.closest('.delete-btn');
-      if (btn) {
-        const id = btn.closest('.todo-item').dataset.id;
+      const item = e.target.closest('.todo-item');
+      if (!item) return;
+      const id = item.dataset.id;
+
+      if (e.target.closest('.delete-btn')) {
         deleteTodo(id);
+        return;
+      }
+
+      if (e.target.closest('.edit-btn')) {
+        startEdit(id);
+        return;
+      }
+
+      const action = e.target.closest('[data-action]');
+      if (action) {
+        if (action.dataset.action === 'save-edit') saveEdit(id);
+        if (action.dataset.action === 'cancel-edit') cancelEdit();
+      }
+    });
+
+    list.addEventListener('keydown', e => {
+      if (!editingId) return;
+      if (e.key === 'Enter' && e.target.matches('.edit-form input[type="text"]')) {
+        e.preventDefault();
+        saveEdit(editingId);
+      }
+      if (e.key === 'Escape') {
+        cancelEdit();
       }
     });
 
     clearBtn.addEventListener('click', clearCompleted);
+
+    deleteDialogConfirm.addEventListener('click', confirmDelete);
+    deleteDialogCancel.addEventListener('click', cancelDelete);
+    deleteDialog.addEventListener('cancel', () => { pendingDeleteId = null; });
 
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -533,7 +1890,77 @@
       });
     });
 
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value;
+      render();
+    });
+
+    categoryFiltersContainer.addEventListener('click', e => {
+      const btn = e.target.closest('button[data-category]');
+      if (!btn) return;
+      categoryFiltersContainer.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.category;
+      render();
+    });
+
+    // Category management dialog
+    manageCategoriesBtn.addEventListener('click', openCategoryDialog);
+    addCategoryBtn.addEventListener('click', addCategory);
+    categoryDialogDone.addEventListener('click', () => {
+      editingCategoryKey = null;
+      categoryDialog.close();
+    });
+    categoryDialog.addEventListener('cancel', () => { editingCategoryKey = null; });
+
+    newCategoryNameInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addCategory();
+      }
+    });
+
+    categoryDialogList.addEventListener('click', e => {
+      const item = e.target.closest('.category-dialog-item');
+      if (!item) return;
+      const key = item.dataset.key;
+
+      const action = e.target.closest('[data-action]');
+      if (!action) return;
+
+      if (action.dataset.action === 'edit-category') startEditCategory(key);
+      if (action.dataset.action === 'delete-category') deleteCategory(key);
+      if (action.dataset.action === 'save-edit-category') saveEditCategory();
+      if (action.dataset.action === 'cancel-edit-category') cancelEditCategory();
+    });
+
+    categoryDialogList.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.target.matches('#edit-category-name')) {
+        e.preventDefault();
+        saveEditCategory();
+      }
+      if (e.key === 'Escape' && editingCategoryKey) {
+        cancelEditCategory();
+      }
+    });
+
+    // Ctrl+Z / Cmd+Z for undo
+    document.addEventListener('keydown', e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        if (e.target.matches('input, textarea, select')) return;
+        e.preventDefault();
+        undo();
+      }
+    });
+
+    // Update countdowns every minute
+    setInterval(() => {
+      if (!editingId) render();
+    }, 60_000);
+
     // Initial render
+    renderCategoryFilters();
+    renderCategorySelect();
     render();
   </script>
 </body>
