@@ -2,14 +2,14 @@
 
 ## Project Overview
 
-**tender-circuit** is a zero-dependency task/event planner built with vanilla HTML, CSS, and JavaScript. Split across three files (`index.html`, `styles.css`, `app.js`) with no build step. Two object types: **Events** (date+time, location, notes) and **Tasks** (three time states, statuses, labels, subtasks, dependencies).
+**mise-en-place** is a zero-dependency task/event planner built with vanilla HTML, CSS, and JavaScript. Split across three files (`index.html`, `styles.css`, `app.js`) with no build step. Two object types: **Events** (date+time, location, notes) and **Tasks** (three time states, statuses, labels, subtasks, dependencies).
 
-Live at: https://snackdriven.github.io/tender-circuit/
+Live at: https://snackdriven.github.io/mise-en-place/
 
 ## Repository Structure
 
 ```
-tender-circuit/
+mise-en-place/
 ├── .github/workflows/deploy-pages.yml   # GitHub Pages auto-deploy on push to main
 ├── index.html                           # HTML markup only (~45 lines)
 ├── styles.css                           # All CSS (~650 lines)

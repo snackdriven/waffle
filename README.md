@@ -1,8 +1,8 @@
-# tender-circuit
+# mise-en-place
 
 A task and event planner with zero dependencies and a whole lot of [Catppuccin Mocha](https://github.com/catppuccin/catppuccin).
 
-**[Try it live](https://snackdriven.github.io/tender-circuit/)**
+**[Try it live](https://snackdriven.github.io/mise-en-place/)**
 
 ![Dark mode planner with Catppuccin Mocha colors](https://img.shields.io/badge/theme-catppuccin%20mocha-cba6f7?style=for-the-badge) ![No dependencies](https://img.shields.io/badge/dependencies-0-a6e3a1?style=for-the-badge)
 

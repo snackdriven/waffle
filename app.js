@@ -2063,6 +2063,39 @@ async function exchangeCodeForTokens() {
   }
 }
 
+async function exchangeTokenHash() {
+  const params = new URLSearchParams(window.location.search);
+  const tokenHash = params.get('token_hash');
+  const type = params.get('type');
+  if (!tokenHash || type !== 'email') return null;
+  history.replaceState(null, '', window.location.pathname);
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ token_hash: tokenHash, type: 'email' }),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      console.error('[auth] token_hash verification failed:', res.status, body);
+      return null;
+    }
+    const data = await res.json();
+    if (!data.access_token || !data.refresh_token) return null;
+    return {
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token,
+      expiresAt: Date.now() + (data.expires_in || 3600) * 1000,
+    };
+  } catch (err) {
+    console.error('[auth] token_hash verification error:', err);
+    return null;
+  }
+}
+
 async function fetchUser() {
   if (!authSession) return;
   try {
@@ -2369,7 +2402,7 @@ function startApp() {
     // ? — open GitHub repo
     if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (e.target.matches('input, textarea, select')) return;
-      window.open('https://github.com/snackdriven/tender-circuit', '_blank', 'noopener');
+      window.open('https://github.com/snackdriven/mise-en-place', '_blank', 'noopener,noreferrer');
     }
   });
 
@@ -2397,7 +2430,8 @@ async function init() {
 
   const hashTokens = extractTokensFromHash();
   const pkceTokens = !hashTokens ? await exchangeCodeForTokens() : null;
-  const tokens = hashTokens || pkceTokens;
+  const tokenHashTokens = !hashTokens && !pkceTokens ? await exchangeTokenHash() : null;
+  const tokens = hashTokens || pkceTokens || tokenHashTokens;
   if (tokens) {
     authSession = { ...tokens };
     saveAuthSession(authSession);
