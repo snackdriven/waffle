@@ -117,6 +117,9 @@
     justify-content: space-between;
 
     & h1 {
+      display: flex;
+      align-items: center;
+      gap: 0.35em;
       font-size: var(--text-lg);
       font-weight: 700;
       color: var(--ctp-mauve);

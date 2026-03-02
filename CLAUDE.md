@@ -4,7 +4,7 @@
 
 **mise-en-place** is a zero-dependency task/event planner built with vanilla HTML, CSS, and JavaScript. Split across three files (`index.html`, `styles.css`, `app.js`) with no build step. Two object types: **Events** (date+time, location, notes) and **Tasks** (three time states, statuses, labels, subtasks, dependencies).
 
-Live at: https://snackdriven.github.io/mise-en-place/
+Live at: https://snackdriven.github.io/nibble/
 
 ## Repository Structure
 

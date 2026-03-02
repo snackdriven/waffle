@@ -2402,7 +2402,7 @@ function startApp() {
     // ? — open GitHub repo
     if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (e.target.matches('input, textarea, select')) return;
-      window.open('https://github.com/snackdriven/mise-en-place', '_blank', 'noopener,noreferrer');
+      window.open('https://github.com/snackdriven/nibble', '_blank', 'noopener,noreferrer');
     }
   });
 
