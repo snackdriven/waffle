@@ -713,6 +713,20 @@ function createTask(formData) {
   showToast('Task created', true);
 }
 
+// === Rendering helpers ===
+function buildSubtaskList(task) {
+  const subtaskList = el('div', { className: 'card-subtask-list' });
+  task.subtasks.forEach(s => {
+    const entry = el('div', { className: `card-subtask-entry${s.done ? ' done' : ''}` });
+    const chk = el('input', { type: 'checkbox', checked: s.done });
+    chk.setAttribute('aria-label', s.text);
+    chk.addEventListener('change', () => toggleSubtask(task.id, s.id));
+    entry.append(chk, el('span', { className: 'subtask-text', text: s.text }));
+    subtaskList.appendChild(entry);
+  });
+  return subtaskList;
+}
+
 // === CRUD: Toggle / Complete ===
 function toggleSubtask(taskId, subtaskId) {
   const task = items.find(i => i.id === taskId);
@@ -1557,15 +1571,15 @@ function renderEventCard(event, opts = {}) {
   const titleRow = el('div', { className: 'item-title-row' });
   titleRow.appendChild(el('span', { className: 'item-title', text: event.title }));
 
-  const eventCountdown = formatEventCountdown(event.dateTime, event.allDay);
-  if (eventCountdown) {
-    titleRow.appendChild(el('span', { className: `countdown ${eventCountdown.cls}`, text: eventCountdown.text }));
-  }
-
   const content = el('div', { className: 'item-content' });
   content.appendChild(titleRow);
 
   const meta = el('div', { className: 'item-meta' });
+
+  const eventCountdown = formatEventCountdown(event.dateTime, event.allDay);
+  if (eventCountdown) {
+    meta.appendChild(el('span', { className: `countdown ${eventCountdown.cls}`, text: eventCountdown.text }));
+  }
   if (event.dateTime) {
     if (opts.agendaMode) {
       // Date is already in the group header — show time only for timed events
@@ -1631,18 +1645,18 @@ function renderTaskCard(task, opts = {}) {
   const titleRow = el('div', { className: 'item-title-row' });
   titleRow.appendChild(el('span', { className: 'item-title', text: task.title }));
 
-  if (task.dueDate && task.status !== 'done') {
-    const countdown = formatCountdown(task.dueDate);
-    if (countdown) {
-      titleRow.appendChild(el('span', { className: `countdown ${countdown.cls}`, text: countdown.text }));
-    }
-  }
-
   const content = el('div', { className: 'item-content' });
   content.appendChild(titleRow);
 
-  // Meta: labels, subtasks, actionability badges, stale
+  // Meta: countdown (first), labels, subtasks, actionability badges, stale
   const meta = el('div', { className: 'item-meta' });
+
+  if (task.dueDate && task.status !== 'done') {
+    const countdown = formatCountdown(task.dueDate);
+    if (countdown) {
+      meta.appendChild(el('span', { className: `countdown ${countdown.cls}`, text: countdown.text }));
+    }
+  }
 
   (task.labels || []).forEach(l => {
     meta.appendChild(el('span', { className: 'label-chip label-badge', text: l, ariaLabel: `Label: ${l}` }));
@@ -1659,9 +1673,18 @@ function renderTaskCard(task, opts = {}) {
     });
     expandBtn.addEventListener('click', e => {
       e.stopPropagation();
-      if (expandedIds.has(task.id)) expandedIds.delete(task.id);
-      else expandedIds.add(task.id);
-      render();
+      const nowExpanded = !expandedIds.has(task.id);
+      if (nowExpanded) {
+        expandedIds.add(task.id);
+        expandBtn.classList.add('expanded');
+        expandBtn.setAttribute('aria-label', 'Collapse subtasks');
+        content.appendChild(buildSubtaskList(task));
+      } else {
+        expandedIds.delete(task.id);
+        expandBtn.classList.remove('expanded');
+        expandBtn.setAttribute('aria-label', 'Expand subtasks');
+        content.querySelector('.card-subtask-list')?.remove();
+      }
     });
     meta.appendChild(expandBtn);
   }
@@ -1685,16 +1708,7 @@ function renderTaskCard(task, opts = {}) {
   if (meta.childNodes.length > 0) content.appendChild(meta);
 
   if (expandedIds.has(task.id) && task.subtasks && task.subtasks.length > 0) {
-    const subtaskList = el('div', { className: 'card-subtask-list' });
-    task.subtasks.forEach(s => {
-      const entry = el('div', { className: `card-subtask-entry${s.done ? ' done' : ''}` });
-      const chk = el('input', { type: 'checkbox', checked: s.done });
-      chk.setAttribute('aria-label', s.text);
-      chk.addEventListener('change', () => toggleSubtask(task.id, s.id));
-      entry.append(chk, el('span', { className: 'subtask-text', text: s.text }));
-      subtaskList.appendChild(entry);
-    });
-    content.appendChild(subtaskList);
+    content.appendChild(buildSubtaskList(task));
   }
 
   card.appendChild(content);
