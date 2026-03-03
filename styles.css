@@ -146,11 +146,12 @@
   /* View navigation tabs */
   .view-nav {
     display: flex;
-    gap: var(--space-xs);
+    gap: var(--space-2xs);
     overflow-x: auto;
     scrollbar-width: none;
-    border-block-end: 1px solid var(--ctp-surface1);
-    padding-block-end: var(--space-xs);
+    background: var(--ctp-mantle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xs);
 
     &::-webkit-scrollbar {
       display: none;
@@ -160,29 +161,29 @@
   .view-tab {
     flex: 0 0 auto;
     padding-block: var(--space-sm);
-    padding-inline: var(--space-lg);
+    padding-inline: var(--space-md);
     border: none;
-    border-block-end: 2px solid transparent;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background: transparent;
     color: var(--ctp-overlay2);
     font-family: inherit;
     font-size: var(--text-tab);
     font-weight: 500;
     cursor: pointer;
-    transition: color 0.2s, border-color 0.2s, transform 0.1s;
+    transition: color 0.15s, background 0.15s, transform 0.1s;
     min-block-size: var(--touch-min);
     white-space: nowrap;
     display: flex;
     align-items: center;
 
     &.active {
-      border-block-end-color: var(--ctp-mauve);
+      background: var(--ctp-surface0);
       color: var(--ctp-text);
       font-weight: 600;
     }
 
     &:hover:not(.active) {
+      background: color-mix(in oklch, var(--ctp-surface0) 60%, transparent);
       color: var(--ctp-subtext0);
     }
 
@@ -196,28 +197,29 @@
   }
 
   .create-btn {
-    flex: 1;
-    padding: var(--space-md) var(--space-lg);
-    border: 2px solid var(--ctp-surface2);
-    border-radius: var(--radius-lg);
-    background: transparent;
-    color: var(--ctp-subtext0);
+    flex: none;
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--ctp-surface1);
+    border-radius: var(--radius-md);
+    background: var(--ctp-surface0);
+    color: var(--ctp-subtext1);
     font-family: inherit;
-    font-size: var(--text-md);
+    font-size: var(--text-sm);
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
     min-block-size: var(--touch-min);
 
     &:hover {
-      border-color: var(--ctp-pink);
+      background: var(--ctp-surface1);
+      border-color: var(--ctp-surface2);
       color: var(--ctp-text);
     }
 
     &.active {
-      border-color: var(--ctp-pink);
-      background: color-mix(in oklch, var(--ctp-pink) 15%, transparent);
-      color: var(--ctp-pink);
+      border-color: var(--ctp-mauve);
+      background: color-mix(in oklch, var(--ctp-mauve) 15%, var(--ctp-surface0));
+      color: var(--ctp-mauve);
     }
 
     &:active {
@@ -1233,34 +1235,35 @@
   /* Calendar mode toggle (Day / Agenda) */
   .calendar-mode-toggle {
     display: flex;
-    gap: var(--space-xs);
-    border-block-end: 1px solid var(--ctp-surface1);
-    padding-block-end: var(--space-xs);
+    gap: var(--space-2xs);
+    background: var(--ctp-mantle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xs);
     align-self: flex-start;
   }
 
   .calendar-mode-btn {
     padding-block: var(--space-sm);
-    padding-inline: var(--space-lg);
+    padding-inline: var(--space-md);
     border: none;
-    border-block-end: 2px solid transparent;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background: transparent;
     color: var(--ctp-overlay2);
     font-family: inherit;
     font-size: var(--text-tab);
     font-weight: 500;
     cursor: pointer;
-    transition: color 0.2s, border-color 0.2s, transform 0.1s;
+    transition: color 0.15s, background 0.15s, transform 0.1s;
     min-block-size: var(--touch-min);
 
     &.active {
-      border-block-end-color: var(--ctp-mauve);
+      background: var(--ctp-surface0);
       color: var(--ctp-text);
       font-weight: 600;
     }
 
     &:hover:not(.active) {
+      background: color-mix(in oklch, var(--ctp-surface0) 60%, transparent);
       color: var(--ctp-subtext0);
     }
 

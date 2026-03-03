@@ -1,0 +1,10 @@
+{
+  "name": "nibble",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.0"
+  }
+}
